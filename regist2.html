@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricox - Register</title>
+    <link rel="icon" href="logo1.jpg">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Background and form styling */
+        .background {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .form-wrapper {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+        }
+
+        /* Header styling with logo */
+        header img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        header p {
+            font-size: 14px;
+            color: #999;
+        }
+
+        /* Form styling */
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #023a24;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #023a24;
+        }
+
+        /* Links */
+        p {
+            font-size: 14px;
+            color: #555;
+            margin-top: 15px;
+        }
+
+        p a {
+            color: #023a24;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="background">
+    <div class="form-wrapper">
+        <header>
+            <img src="logo2.jpg" alt="Electricox Icon" class="app-icon"> <!-- Updated the icon -->
+            <h1>GridX</h1> <!-- Updated title -->
+            <p>Go Green, Go Electric</p> <!-- Tagline below the title -->
+        </header>
+
+        <section class="auth-section">
+            <form id="registerForm" onsubmit="return validateRegisterForm()">
+                <input type="text" id="registerName" placeholder="Name" required>
+                <input type="text" id="registerAddress" placeholder="Address" required>
+                <input type="email" id="registerEmail" placeholder="Email" required>
+                <input type="tel" id="registerPhone" placeholder="Phone" required>
+                <input type="password" id="registerPassword" placeholder="Password" required>
+                <button type="submit">Sign Up</button>
+                <p>Already have an account? <a href="login2.html">Login</a></p>
+            </form>
+        </section>
+    </div>
+</div>
+
+<script>
+    function validateRegisterForm() {
+        const name = document.getElementById('registerName').value.trim();
+        const address = document.getElementById('registerAddress').value.trim();
+        const email = document.getElementById('registerEmail').value.trim();
+        const phone = document.getElementById('registerPhone').value.trim();
+        const password = document.getElementById('registerPassword').value;
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!name || !address || !email || !phone || !password) {
+            alert("All fields are required.");
+            return false;
+        }
+        if (!emailPattern.test(email)) {
+            alert("Please enter a valid email address.");
+            return false;
+        }
+        if (password.length < 6) {
+            alert("Password must be at least 6 characters long.");
+            return false;
+        }
+
+        // Check if the phone number is valid (add further validation if needed)
+        if (phone.length < 10) {
+            alert("Please enter a valid phone number.");
+            return false;
+        }
+
+        // Retrieve users from local storage
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
+        if (users.some(user => user.email === email)) {
+            alert("This email is already registered.");
+            return false;
+        }
+
+        // Save new user details
+        users.push({ name, address, email, phone, password });
+        localStorage.setItem("users", JSON.stringify(users));
+        alert("Registration successful! You can now log in.");
+
+        window.location.href = "login.html";
+        return false;
+    }
+</script>
+
+</body>
+</html>

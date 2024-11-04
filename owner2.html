@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Dashboard - GridX</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+            width: 700px;
+            margin-top: 20px;
+        }
+        .logout-btn {
+            width: 100px;
+            height: 50px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 10px; /* Smaller font size */
+            padding: 5px 8px; /* Reduced padding */
+            background-color: #ff4d4d; /* Example background color */
+            color: white; /* Text color */
+            border: none; /* No border */
+            border-radius: 5px; /* Slightly rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+        }
+        .form-section {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Owner Management</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <section>
+        <h2>Add New Charging Station</h2>
+        <div class="form-section">
+            <label for="stationName">Station Name:</label>
+            <input type="text" id="stationName" placeholder="Enter Station Name" required>
+            <br>
+            <label for="stationLocation">Location (Latitude, Longitude):</label>
+            <input type="text" id="stationLocation" placeholder="Enter Latitude, Longitude" required>
+            <br>
+            <label for="chargingPortType">Charging Port Type:</label>
+            <select id="chargingPortType" required>
+                <option value="" disabled selected>Select Charging Port Type</option>
+                <option value="Type 1">Type 1</option>
+                <option value="Type 2">Type 2</option>
+                <option value="CCS">CCS</option>
+                <option value="CHAdeMO">CHAdeMO</option>
+            </select>
+            <br>
+            <button onclick="addStation()">Add Station</button>
+        </div>
+
+        <!-- Map container -->
+        <div id="map"></div>
+
+        <h3>Charging Stations Overview</h3>
+        <p>Total Charging Stations Available: <span id="totalStations">0</span></p>
+        <p>Total Charging Stations for Users: <span id="stationsForUsers">0</span></p>
+
+        <!-- Table to display charging stations -->
+        <h3>List of Charging Stations</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Station Name</th>
+                    <th>Location</th>
+                    <th>Charging Port Type</th>
+                </tr>
+            </thead>
+            <tbody id="stationList">
+                <!-- Charging stations will be appended here -->
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Leaflet Script -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <script>
+        let map;
+        let marker;
+        let totalChargingStations = 0;
+        let stationsForUsers = 0; // Adjust this based on your logic
+        const stationData = []; // Array to hold charging station data
+
+        function initMap() {
+            // Initialize map centered at a default location
+            map = L.map('map').setView([37.7749, -122.4194], 13);
+
+            // Add OpenStreetMap layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Get the user's current location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const { latitude, longitude } = position.coords;
+                    map.setView([latitude, longitude], 13);
+                    L.marker([latitude, longitude]).addTo(map).bindPopup("You are here").openPopup();
+                });
+            }
+
+            // Add click event to the map
+            map.on('click', function(e) {
+                if (marker) map.removeLayer(marker); // Clear existing marker
+                marker = L.marker(e.latlng).addTo(map).bindPopup("Selected Location").openPopup();
+                document.getElementById('stationLocation').value = `${e.latlng.lat}, ${e.latlng.lng}`; // Set coordinates to input
+            });
+        }
+
+        function addStation() {
+            const stationName = document.getElementById('stationName').value.trim();
+            const stationLocation = document.getElementById('stationLocation').value.trim();
+            const chargingPortType = document.getElementById('chargingPortType').value;
+
+            if (!stationName || !stationLocation || !chargingPortType) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            // Save the station data to an array
+            stationData.push({
+                name: stationName,
+                location: stationLocation,
+                portType: chargingPortType
+            });
+
+            // Update the list of charging stations in the table
+            updateStationList();
+
+            // Update total charging stations count
+            totalChargingStations++;
+            stationsForUsers++; // Update this based on your logic
+            document.getElementById('totalStations').innerText = totalChargingStations;
+            document.getElementById('stationsForUsers').innerText = stationsForUsers;
+
+            // Optionally, reset form fields
+            document.getElementById('stationName').value = '';
+            document.getElementById('stationLocation').value = '';
+            document.getElementById('chargingPortType').selectedIndex = 0; // Reset dropdown
+            if (marker) map.removeLayer(marker); // Clear marker after adding station
+        }
+
+        function updateStationList() {
+            const stationList = document.getElementById('stationList');
+            stationList.innerHTML = ''; // Clear existing entries
+
+            stationData.forEach(station => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${station.name}</td><td>${station.location}</td><td>${station.portType}</td>`;
+                stationList.appendChild(row);
+            });
+        }
+
+        function logout() {
+            alert("Logging out...");
+            window.location.href = "login.html";
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,109 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+}
+
+
+
+.form-wrapper {
+    background: rgba(0, 0, 0, 0.75);
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.app-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.auth-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input, button {
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+input {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ddd;
+    color: #333;
+}
+
+input:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+button {
+    background-color: #28a745;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+p {
+    font-size: 14px;
+    color: #bbb;
+}
+
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('register_background.png.jpg'); /* Replace with your image file */
+    background-size: cover; /* Ensures the image covers the whole background */
+    background-position: center; /* Centers the image */
+}
+
+.background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height of the viewport */
+    background-color: rgba(0, 0, 0, 0.5); /* Optional: Adds a dark overlay for better text visibility */
+}

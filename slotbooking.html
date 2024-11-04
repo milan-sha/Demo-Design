@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Booking - Electricox</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            background-color: #08581c;
+            padding: 10px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin-left: 15px;
+            font-size: 20px;
+        }
+
+        header button {
+            margin-right: 15px;
+            padding: 5px 10px;
+            background-color: white;
+            color: #f44336;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        header button:hover {
+            background-color: #eee;
+        }
+
+        /* Slot Booking Section */
+        section {
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        section h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        /* Slot Container Styles */
+        #slotsContainer {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Slot Styles */
+        .slot {
+            width: 60px;
+            height: 60px;
+            background-color: #fff;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .slot.available {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+        }
+
+        .slot.requested {
+            background-color: #8bc34a;
+            color: white;
+        }
+
+        .slot.unavailable {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Status Legend */
+        .status-legend {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 10px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .status-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .available-color {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+        }
+
+        .requested-color {
+            background-color: #8bc34a;
+        }
+
+        .unavailable-color {
+            background-color: #f70606;
+        }
+
+        /* Save Button */
+        #saveButton {
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #saveButton:hover {
+            background-color: #03481d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Slot Booking</h1>
+        <button onclick="window.location.href='user2.html'">Back to Map</button>
+    </header>
+
+    <!-- Slot Booking Section -->
+    <section>
+        <h2>Select a Slot</h2>
+
+        <!-- Status Legend -->
+        <div class="status-legend">
+            <div class="status-item">
+                <div class="status-color unavailable-color"></div> Not Available
+            </div>
+            <div class="status-item">
+                <div class="status-color requested-color"></div> Requested
+            </div>
+            <div class="status-item">
+                <div class="status-color available-color"></div> Available
+            </div>
+        </div>
+
+        <!-- Slots Grid -->
+        <div id="slotsContainer"></div>
+
+        <!-- Save Button -->
+        <button id="saveButton">Save Booking</button>
+    </section>
+
+    <script>
+        const slots = [
+            { id: 'A1', status: 'unavailable' },
+            { id: 'A2', status: 'available' },
+            { id: 'A3', status: 'available' },
+            { id: 'A4', status: 'available' },
+            { id: 'B1', status: 'available' },
+            { id: 'B2', status: 'available' },
+            { id: 'B3', status: 'available' },
+            { id: 'B4', status: 'available' },
+            { id: 'C1', status: 'available' },
+            { id: 'C2', status: 'available' },
+            { id: 'C3', status: 'available' },
+            { id: 'C4', status: 'available' },
+            { id: 'D1', status: 'available' },
+            { id: 'D2', status: 'available' },
+            { id: 'D3', status: 'available' },
+            { id: 'D4', status: 'available' },
+            { id: 'E1', status: 'available' },
+            { id: 'E2', status: 'available' },
+            { id: 'E3', status: 'available' },
+            { id: 'E4', status: 'available' },
+            { id: 'F1', status: 'available' },
+            { id: 'F2', status: 'available' },
+            { id: 'F3', status: 'available' },
+            { id: 'F4', status: 'available' },
+            { id: 'G1', status: 'available' },
+            { id: 'G2', status: 'available' },
+            { id: 'G3', status: 'available' },
+            { id: 'G4', status: 'available' }
+        ];
+
+        // Display slots dynamically based on the availability
+        function displaySlots() {
+            const container = document.getElementById('slotsContainer');
+            container.innerHTML = ""; // Clear previous content
+
+            slots.forEach(slot => {
+                const slotDiv = document.createElement('div');
+                slotDiv.classList.add('slot', slot.status);
+                slotDiv.id = slot.id;
+                slotDiv.innerText = slot.id;
+
+                // Add click event to mark as requested
+                if (slot.status === 'available') {
+                    slotDiv.onclick = function () {
+                        slot.status = 'requested';
+                        slotDiv.classList.remove('available');
+                        slotDiv.classList.add('requested');
+                    };
+                }
+                container.appendChild(slotDiv);
+            });
+        }
+
+        function saveBooking() {
+            const requestedSlots = slots.filter(slot => slot.status === 'requested');
+            if (requestedSlots.length > 0) {
+                const bookingDetails = requestedSlots.map(slot => slot.id).join(', ');
+                alert(`Slot(s) booked: ${bookingDetails}`);
+
+                // Here you would generate a QR code (explained below)
+                generateQRCode(`Booked Slots: ${bookingDetails}`);
+            } else {
+                alert("Please select at least one slot.");
+            }
+        }
+
+        function generateQRCode(details) {
+            const qrCodeContainer = document.createElement('div');
+            qrCodeContainer.innerHTML = `
+                <h3>Your QR Code:</h3>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(details)}&size=150x150" alt="QR Code">
+            `;
+            document.body.appendChild(qrCodeContainer);
+        }
+
+        document.getElementById('saveButton').onclick = saveBooking;
+
+        window.onload = displaySlots;
+    </script>
+</body>
+</html>

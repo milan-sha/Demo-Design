@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - GridX</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <style>
+        #map {
+            height: 600px;
+            margin-top: 20px;
+            width: 700px;
+        }
+        .logout-btn {
+            width: 100px;
+            height: 50px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+        .slot-booking-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Admin Management</h1>   <br>
+        <br>
+        <br>
+        <br><br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br><br>
+        <br>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <section>
+        <!-- Map container -->
+        <div id="map"></div>
+
+        <!-- Slot Booking Button -->
+        <button class="slot-booking-button" onclick="window.location.href='slotBooking.html'">Book Slot</button>
+    </section>
+
+    <!-- Leaflet and Plugins -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+
+    <script>
+        let map, marker;
+
+        function initMap() {
+            // Initialize map centered at a default location
+            map = L.map('map').setView([37.7749, -122.4194], 13);
+
+            // Layer options for satellite and street view
+            const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            });
+
+            const satelliteLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenTopoMap contributors'
+            });
+
+            streetLayer.addTo(map); // Set default to street view
+
+            // Add layer control for street and satellite view
+            L.control.layers({
+                "Street View": streetLayer,
+                "Satellite View": satelliteLayer
+            }).addTo(map);
+
+            // Add geocoder (search box)
+            L.Control.geocoder().addTo(map);
+
+            // Locate user
+            L.control.locate().addTo(map);
+
+            // Marker initialization on click
+            map.on('click', function(e) {
+                if (marker) map.removeLayer(marker); // Clear existing marker
+                marker = L.marker(e.latlng).addTo(map).bindPopup("Selected Location").openPopup();
+            });
+        }
+
+        function logout() {
+            alert("Logging out...");
+            window.location.href = "login2.html";
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+

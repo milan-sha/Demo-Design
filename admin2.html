@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - GridX</title>
+    <br>
+    <br>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logo.jpg">
+    <style>
+        /* Styling for the logout button in the top-right corner */
+        .logout-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px; /* Smaller font size */
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #000000;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #0d0d0d;
+        }
+
+        /* Delete icon styling */
+        .delete-icon {
+            cursor: pointer;
+            color: red; /* Color of the delete icon */
+            font-size: 18px; /* Size of the icon */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard - Manage Users and Owners </h1>
+        <br>
+        <br>
+        <br>
+        <br><br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br><br>   <br>
+        <br>
+        <br>
+        <br><br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br><br>
+        <br>
+        <br>
+        <button class="logout-btn" onclick="logout()">
+        </button>
+    </header>
+
+    <section>
+        <!-- Table displaying users and owners -->
+        <h2>Users and Owners</h2>
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically added here -->
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        // Load users from local storage and populate the table
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem("users") || "[]");
+            const tableBody = document.getElementById("userTable").querySelector("tbody");
+            tableBody.innerHTML = ""; // Clear existing rows
+
+            users.forEach((user, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${user.email}</td>
+                    <td>${user.username}</td>
+                    <td>${user.userType}</td>
+                    <td>
+                        <span class="delete-icon" onclick="deleteUser(${index})">🗑️</span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Delete user function
+        function deleteUser(index) {
+            const users = JSON.parse(localStorage.getItem("users") || "[]");
+            users.splice(index, 1); // Remove user from the array
+            localStorage.setItem("users", JSON.stringify(users));
+            loadUsers(); // Refresh the table
+        }
+
+        // Logout function
+        function logout() {
+            alert("Logging out...");
+            window.location.href = "login2.html";
+        }
+
+        // Load users on page load
+        document.addEventListener("DOMContentLoaded", loadUsers);
+    </script>
+</body>
+</html>
+
+
+
